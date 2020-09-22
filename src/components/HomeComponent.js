@@ -22,13 +22,13 @@ function Home(props) {
     <div className="container">
       <div className="row">
         <div className="col-md m-1">
-          <RenderCard item={props.campsite} />
+          <RenderCard item={props.campsites} />
         </div>
         <div className="col-md m-1">
           <RenderCard item={props.promotions} />
         </div>
         <div className="col-md m-1">
-          <RenderCard item={props.partner} />
+          <RenderCard item={props.partners} />
         </div>
       </div>
     </div>
