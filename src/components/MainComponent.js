@@ -6,11 +6,17 @@ import Contact from "../components/ContactComponent";
 import Home from "./HomeComponent";
 import About from "./AboutComponent";
 import CampsiteInfo from "./CampsiteInfoComponent";
-import { CAMPSITES } from "../shared/campsites";
-import { COMMENTS } from "../shared/comments";
-import { PARTNERS } from "../shared/partners";
-import { PROMOTIONS } from "../shared/promotions";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+
+const mapStateToProps = (state) => {
+  return {
+    campsite: state.campsite,
+    comments: state.comments,
+    partners: state.partners,
+    promotions: state.promotions,
+  };
+};
 
 class Main extends Component {
   constructor(props) {
@@ -28,11 +34,11 @@ class Main extends Component {
       return (
         <CampsiteInfo
           campsite={
-            this.state.campsites.filter(
+            this.props.campsites.filter(
               (campsite) => campsite.id === +match.params.campsiteId
             )[0]
           }
-          comments={this.state.comments.filter(
+          comments={this.props.comments.filter(
             (comment) => comment.campsiteId === +match.params.campsiteId
           )}
         />
@@ -43,13 +49,13 @@ class Main extends Component {
       return (
         <Home
           campsites={
-            this.state.campsites.filter((campsite) => campsite.featured)[0]
+            this.props.campsites.filter((campsite) => campsite.featured)[0]
           }
           promotions={
-            this.state.promotions.filter((promotion) => promotion.featured)[0]
+            this.props.promotions.filter((promotion) => promotion.featured)[0]
           }
           partners={
-            this.state.partners.filter((partner) => partner.featured)[0]
+            this.props.partners.filter((partner) => partner.featured)[0]
           }
         />
       );
@@ -63,7 +69,7 @@ class Main extends Component {
           <Route
             exact
             path="/directory"
-            render={() => <Directory campsites={this.state.campsites} />}
+            render={() => <Directory campsites={this.props.campsites} />}
           />
           <Route
             exact
@@ -73,11 +79,11 @@ class Main extends Component {
           <Route
             exact
             path="/aboutus"
-            render={() => <About partners={this.state.partners} />}
+            render={() => <About partners={this.props.partners} />}
           />
           <Route exact path="/contactus" component={Contact} />
           <Redirect to="/home" />
-          <Directory campsites={this.state.campsites} />
+          <Directory campsites={this.props.campsites} />
         </Switch>
         <Footer />
       </div>
@@ -85,4 +91,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default withRouter(connect(mapStateToProps)(Main));
