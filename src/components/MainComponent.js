@@ -11,7 +11,7 @@ import { connect } from "react-redux";
 
 const mapStateToProps = (state) => {
   return {
-    campsite: state.campsite,
+    campsites: state.campsites,
     comments: state.comments,
     partners: state.partners,
     promotions: state.promotions,
@@ -19,16 +19,6 @@ const mapStateToProps = (state) => {
 };
 
 class Main extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      campsites: CAMPSITES,
-      comments: COMMENTS,
-      partners: PARTNERS,
-      promotions: PROMOTIONS,
-    };
-  }
-
   render() {
     const CampsiteWithId = ({ match }) => {
       return (
