@@ -1,13 +1,14 @@
-import React, { Component } from "react";
-import Header from "./HeaderComponent";
-import Footer from "./FooterComponent";
-import Directory from "./DirectoryComponent";
-import Contact from "../components/ContactComponent";
 import Home from "./HomeComponent";
 import About from "./AboutComponent";
-import CampsiteInfo from "./CampsiteInfoComponent";
-import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import Header from "./HeaderComponent";
+import Footer from "./FooterComponent";
+import React, { Component } from "react";
+import Directory from "./DirectoryComponent";
+import CampsiteInfo from "./CampsiteInfoComponent";
+import Contact from "../components/ContactComponent";
+import { Switch, Route, Redirect, withRouter } from "react-router-dom";
+import { addComment, fetchCampsites } from "../redux/ActionCreators";
 
 const mapStateToProps = (state) => {
   return {
@@ -18,8 +19,18 @@ const mapStateToProps = (state) => {
   };
 };
 
+const mapDispatchToProps = {
+  addComment: (campsiteId, rating, author, text) =>
+    addComment(campsiteId, rating, author, text),
+  fetchCampsites: () => fetchCampsites(),
+};
+
 class Main extends Component {
+  componentDidMount() {
+    this.props.fetchCampsites();
+  }
   render() {
+    console.log(this.props);
     const CampsiteWithId = ({ match }) => {
       return (
         <CampsiteInfo
@@ -28,9 +39,12 @@ class Main extends Component {
               (campsite) => campsite.id === +match.params.campsiteId
             )[0]
           }
+          isLoading={this.props.campsites.isLoading}
+          errMess={this.props.campsites.errMess}
           comments={this.props.comments.filter(
             (comment) => comment.campsiteId === +match.params.campsiteId
           )}
+          addComment={this.props.addComment}
         />
       );
     };
@@ -47,6 +61,8 @@ class Main extends Component {
           partners={
             this.props.partners.filter((partner) => partner.featured)[0]
           }
+          campsitesLoading={this.props.campsites.isLoading}
+          campsitesErrMess={this.props.campsites.errMess}
         />
       );
     };
@@ -81,4 +97,4 @@ class Main extends Component {
   }
 }
 
-export default withRouter(connect(mapStateToProps)(Main));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
