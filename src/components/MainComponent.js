@@ -1,6 +1,7 @@
 import Home from "./HomeComponent";
 import About from "./AboutComponent";
 import { connect } from "react-redux";
+import { actions } from "react-redux-form";
 import Header from "./HeaderComponent";
 import Footer from "./FooterComponent";
 import React, { Component } from "react";
@@ -23,6 +24,7 @@ const mapDispatchToProps = {
   addComment: (campsiteId, rating, author, text) =>
     addComment(campsiteId, rating, author, text),
   fetchCampsites: () => fetchCampsites(),
+  resetFeedbackForm: () => actions.reset("feedbackForm"),
 };
 
 class Main extends Component {
@@ -35,7 +37,7 @@ class Main extends Component {
       return (
         <CampsiteInfo
           campsite={
-            this.props.campsites.filter(
+            this.props.campsites.campsites.filter(
               (campsite) => campsite.id === +match.params.campsiteId
             )[0]
           }
@@ -53,7 +55,9 @@ class Main extends Component {
       return (
         <Home
           campsites={
-            this.props.campsites.filter((campsite) => campsite.featured)[0]
+            this.props.campsites.campsites.filter(
+              (campsite) => campsite.featured
+            )[0]
           }
           promotions={
             this.props.promotions.filter((promotion) => promotion.featured)[0]
@@ -87,7 +91,13 @@ class Main extends Component {
             path="/aboutus"
             render={() => <About partners={this.props.partners} />}
           />
-          <Route exact path="/contactus" component={Contact} />
+          <Route
+            exact
+            path="/contactus"
+            render={() => (
+              <Contact resetFeedbackForm={this.props.resetFeedbackForm} />
+            )}
+          />
           <Redirect to="/home" />
           <Directory campsites={this.props.campsites} />
         </Switch>

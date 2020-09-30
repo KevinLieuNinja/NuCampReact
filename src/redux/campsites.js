@@ -1,4 +1,3 @@
-import { CAMPSITES } from "../shared/campsites";
 import * as ActionType from "./ActionTypes";
 
 export const Campsites = (
