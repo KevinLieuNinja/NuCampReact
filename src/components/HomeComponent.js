@@ -1,4 +1,5 @@
 import React from "react";
+import { baseUrl } from "../shared/baseUrl";
 import { Card, CardImg, CardText, CardBody, CardTitle } from "reactstrap";
 
 function RenderCard({ item }) {
@@ -6,7 +7,7 @@ function RenderCard({ item }) {
   if (item) {
     return (
       <Card>
-        <CardImg src={item.image} alt={item.name} />
+        <CardImg src={baseUrl + item.image} alt={item.name} />
         <CardBody>
           <CardTitle>{item.name}</CardTitle>
           <CardText>{item.description}</CardText>

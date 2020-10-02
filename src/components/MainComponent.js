@@ -9,7 +9,12 @@ import Directory from "./DirectoryComponent";
 import CampsiteInfo from "./CampsiteInfoComponent";
 import Contact from "../components/ContactComponent";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
-import { addComment, fetchCampsites } from "../redux/ActionCreators";
+import {
+  addComment,
+  fetchCampsites,
+  fetchComments,
+  fetchPromotions,
+} from "../redux/ActionCreators";
 
 const mapStateToProps = (state) => {
   return {
@@ -25,11 +30,15 @@ const mapDispatchToProps = {
     addComment(campsiteId, rating, author, text),
   fetchCampsites: () => fetchCampsites(),
   resetFeedbackForm: () => actions.reset("feedbackForm"),
+  fetchComments: () => fetchComments(),
+  fetchPromotions: () => fetchPromotions(),
 };
 
 class Main extends Component {
   componentDidMount() {
     this.props.fetchCampsites();
+    this.props.fetchComments();
+    this.props.fetchPromotions();
   }
   render() {
     console.log(this.props);
@@ -46,6 +55,7 @@ class Main extends Component {
           comments={this.props.comments.filter(
             (comment) => comment.campsiteId === +match.params.campsiteId
           )}
+          commentsErrMess={this.props.comments.errMess}
           addComment={this.props.addComment}
         />
       );
@@ -59,14 +69,18 @@ class Main extends Component {
               (campsite) => campsite.featured
             )[0]
           }
+          campsitesLoading={this.props.campsites.isLoading}
+          campsitesErrMess={this.props.campsites.errMess}
           promotions={
-            this.props.promotions.filter((promotion) => promotion.featured)[0]
+            this.props.promotions.promotions.filter(
+              (promotion) => promotion.featured
+            )[0]
           }
+          promotionsLoading={this.props.isLoading}
+          promotionsErrMess={this.props.errMess}
           partners={
             this.props.partners.filter((partner) => partner.featured)[0]
           }
-          campsitesLoading={this.props.campsites.isLoading}
-          campsitesErrMess={this.props.campsites.errMess}
         />
       );
     };
