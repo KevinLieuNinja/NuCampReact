@@ -76,8 +76,7 @@ export const addComment = (comment) => ({
   payload: comment,
 });
 
-export const postComment = (campsiteId, rating, author, text) => {
-  dispatch => {
+export const postComment = (campsiteId, rating, author, text) => (dispatch) => {
   const newComment = {
     campsiteId: campsiteId,
     rating: rating,
@@ -85,32 +84,31 @@ export const postComment = (campsiteId, rating, author, text) => {
     text: text,
   };
   newComment.date = new Date().toISOString();
-
-  return fetch(baseUrl + 'comment,', {
-    method:"POST",
+  return fetch(baseUrl + "comment,", {
+    method: "POST",
     body: JSON.stringify(newComment),
-    headers: {'Content-type': 'application/json'}
+    headers: { "Content-type": "application/json" },
   })
-  .then(
-    (res) => {
-      if (res.ok) {
-        return res;
-      } else {
-        const error = new Error(`Error ${res.status}: ${res.statusText}`);
-        error.res = res;
+    .then(
+      (res) => {
+        if (res.ok) {
+          return res;
+        } else {
+          const error = new Error(`Error ${res.status}: ${res.statusText}`);
+          error.res = res;
+          throw error;
+        }
+      },
+      (error) => {
         throw error;
       }
-    },
-    (error) => {
-      throw error;
-    }
-  )
-  .then(res => res.json())
-  .then(res => dispatch(addComment(res)))
-  .catch(error => {
-    console.log("post comment", error.message);
-    alert('your pew pew error\Error:' + error.message);
-  })
+    )
+    .then((res) => res.json())
+    .then((res) => dispatch(addComment(res)))
+    .catch((error) => {
+      console.log("post comment", error.message);
+      alert("your pew pew errorError:" + error.message);
+    });
 };
 
 export const fetchPromotions = () => (dispatch) => {
