@@ -19,7 +19,7 @@ export const ConfigureStore = () => {
         feedbackFrom: InitialFeedback,
       }),
     }),
-    applyMiddleware(thunk, logger)
+    applyMiddleware(thunk)
   );
 
   return store;

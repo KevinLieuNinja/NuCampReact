@@ -1,6 +1,44 @@
 import * as ActionTypes from "./ActionTypes";
 import { baseUrl } from "../shared/baseUrl";
 
+export const postFeedback = (feedback) => () => {
+  const newFeedback = {
+    firstName: feedback.firstName,
+    lastName: feedback.lastName,
+    phoneNum: feedback.phoneNum,
+    email: feedback.email,
+    agree: feedback.agree,
+    contactType: feedback.contactType,
+    feedback: feedback.feedback,
+  };
+
+  return fetch(baseUrl + "feedback", {
+    method: "POST",
+    body: JSON.stringify(newFeedback),
+    headers: { "Content-type": "application/json" },
+  })
+    .then(
+      (res) => {
+        if (res.ok) {
+          return res;
+        } else {
+          const error = new Error(`Error ${res.status}: ${res.statusText}`);
+          error.res = res;
+          throw error;
+        }
+      },
+      (error) => {
+        throw error;
+      }
+    )
+    .then((res) => res.json())
+    .then((res) => alert(JSON.stringify(res)))
+    .catch((error) => {
+      console.log("post feedback", error.message);
+      alert("your pew pew errorError:" + error.message);
+    });
+};
+
 export const fetchCampsites = () => (dispatch) => {
   dispatch(campsitesLoading());
 
@@ -84,7 +122,7 @@ export const postComment = (campsiteId, rating, author, text) => (dispatch) => {
     text: text,
   };
   newComment.date = new Date().toISOString();
-  return fetch(baseUrl + "comment,", {
+  return fetch(baseUrl + "comments", {
     method: "POST",
     body: JSON.stringify(newComment),
     headers: { "Content-type": "application/json" },
@@ -147,4 +185,42 @@ export const promotionsFailed = (errMess) => ({
 export const addPromotions = (promotions) => ({
   type: ActionTypes.ADD_PROMOTIONS,
   payload: promotions,
+});
+
+export const fetchPartners = () => (dispatch) => {
+  dispatch(partnersLoading());
+
+  return fetch(baseUrl + "partners")
+    .then(
+      (res) => {
+        if (res.ok) {
+          return res;
+        } else {
+          const error = new Error(`Error ${res.status}: ${res.statusText}`);
+          error.res = res;
+          throw error;
+        }
+      },
+      (error) => {
+        const errMess = new Error(error.message);
+        throw errMess;
+      }
+    )
+    .then((res) => res.json())
+    .then((partners) => dispatch(addPartners(partners)))
+    .catch((error) => dispatch(partnersFailed(error.message)));
+};
+
+export const partnersLoading = () => ({
+  type: ActionTypes.PARTNERS_LOADING,
+});
+
+export const partnersFailed = (errMess) => ({
+  type: ActionTypes.PARTNERS_FAILED,
+  payload: errMess,
+});
+
+export const addPartners = (partners) => ({
+  type: ActionTypes.ADD_PARTNERS,
+  payload: partners,
 });

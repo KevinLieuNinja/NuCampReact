@@ -14,6 +14,7 @@ import {
   fetchCampsites,
   fetchComments,
   fetchPromotions,
+  fetchPartners,
 } from "../redux/ActionCreators";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
@@ -33,6 +34,7 @@ const mapDispatchToProps = {
   resetFeedbackForm: () => actions.reset("feedbackForm"),
   fetchComments: () => fetchComments(),
   fetchPromotions: () => fetchPromotions(),
+  fetchPartners: () => fetchPartners(),
 };
 
 class Main extends Component {
@@ -40,6 +42,7 @@ class Main extends Component {
     this.props.fetchCampsites();
     this.props.fetchComments();
     this.props.fetchPromotions();
+    this.props.fetchPartners();
   }
   render() {
     console.log(this.props);
@@ -77,11 +80,15 @@ class Main extends Component {
               (promotion) => promotion.featured
             )[0]
           }
-          promotionsLoading={this.props.isLoading}
-          promotionsErrMess={this.props.errMess}
-          partners={
-            this.props.partners.filter((partner) => partner.featured)[0]
+          promotionsLoading={this.props.promotions.isLoading}
+          promotionsErrMess={this.props.promotions.errMess}
+          partner={
+            this.props.partners.partners.filter(
+              (partner) => partner.featured
+            )[0]
           }
+          partnersLoading={this.props.partners.isLoading}
+          partnersErrMess={this.props.partners.errMess}
         />
       );
     };
